@@ -44,6 +44,9 @@ class SearchFilters(BaseModel):
     edge_types: list[str] | None = Field(
         default=None, description='List of edge types to filter on'
     )
+    node_attributes: dict[str, Any] | None = Field(
+        default=None, description='Dictionary of node attributes to filter on'
+    )
     valid_at: list[list[DateFilter]] | None = Field(default=None)
     invalid_at: list[list[DateFilter]] | None = Field(default=None)
     created_at: list[list[DateFilter]] | None = Field(default=None)
@@ -60,6 +63,12 @@ def node_search_filter_query_constructor(
         node_labels = '|'.join(filters.node_labels)
         node_label_filter = ' AND n:' + node_labels
         filter_query += node_label_filter
+
+    if filters.node_attributes:
+        for key, value in filters.node_attributes.items():
+            param_name = f"attr_{key}"
+            filter_query += f" AND n.{key} = ${param_name}"
+            filter_params[param_name] = value
 
     return filter_query, filter_params
 

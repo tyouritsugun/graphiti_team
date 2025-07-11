@@ -62,6 +62,7 @@ def get_range_indices(db_type: str = 'neo4j') -> list[LiteralString]:
             'CREATE INDEX expired_at_edge_index IF NOT EXISTS FOR ()-[e:RELATES_TO]-() ON (e.expired_at)',
             'CREATE INDEX valid_at_edge_index IF NOT EXISTS FOR ()-[e:RELATES_TO]-() ON (e.valid_at)',
             'CREATE INDEX invalid_at_edge_index IF NOT EXISTS FOR ()-[e:RELATES_TO]-() ON (e.invalid_at)',
+            'CREATE INDEX entity_project_domain IF NOT EXISTS FOR (e:Entity) ON (e.project_id, e.knowledge_domain)',
         ]
 
 

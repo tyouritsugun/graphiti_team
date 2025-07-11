@@ -18,7 +18,7 @@ from mcp.server.fastmcp import FastMCP
 from openai import AsyncAzureOpenAI
 from pydantic import BaseModel, Field
 
-from graphiti_core import Graphiti
+from team.graphiti_team import TeamGraphiti
 from graphiti_core.edges import EntityEdge
 from graphiti_core.embedder.azure_openai import AzureOpenAIEmbedderClient
 from graphiti_core.embedder.client import EmbedderClient
@@ -36,6 +36,14 @@ from graphiti_core.search.search_filters import SearchFilters
 from graphiti_core.utils.maintenance.graph_data_operations import clear_data
 
 load_dotenv()
+
+USER_EMAIL = os.getenv("USER_EMAIL")
+PROJECT_ID = os.getenv("PROJECT_ID")
+
+if not USER_EMAIL or not PROJECT_ID:
+    print("Error: USER_EMAIL and PROJECT_ID environment variables must be set.", file=sys.stderr)
+    sys.exit(1)
+
 
 
 DEFAULT_LLM_MODEL = 'gpt-4.1-mini'
@@ -590,13 +598,15 @@ async def initialize_graphiti():
         embedder_client = config.embedder.create_client()
 
         # Initialize Graphiti client
-        graphiti_client = Graphiti(
+        graphiti_client = TeamGraphiti(
             uri=config.neo4j.uri,
             user=config.neo4j.user,
             password=config.neo4j.password,
             llm_client=llm_client,
             embedder=embedder_client,
             max_coroutines=SEMAPHORE_LIMIT,
+            user_email=USER_EMAIL,
+            project_id=PROJECT_ID,
         )
 
         # Destroy graph if requested
