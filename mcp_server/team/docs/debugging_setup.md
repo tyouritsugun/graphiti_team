@@ -44,7 +44,7 @@ VS Code needs to be told how to attach to the running server process.
   "configurations": [
     {
       "name": "Attach to MCP Server (Started by Claude)",
-      "type": "python",
+      "type": "debugpy",
       "request": "attach",
       "connect": {
         "host": "localhost",
