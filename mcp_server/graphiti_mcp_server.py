@@ -577,7 +577,7 @@ mcp = FastMCP(
 )
 
 # Initialize Graphiti client
-graphiti_client: Graphiti | None = None
+graphiti_client: TeamGraphiti | None = None
 
 
 async def initialize_graphiti():
@@ -740,7 +740,7 @@ async def add_memory(
         # NOTE: episode_body must be a properly escaped JSON string. Note the triple backslashes
         add_memory(
             name="Customer Profile",
-            episode_body="{\\\"company\\\": {\\\"name\\\": \\\"Acme Technologies\\\"}, \\\"products\\\": [{\\\"id\\\": \\\"P001\\\", \\\"name\\\": \\\"CloudSync\\\"}, {\\\"id\\\": \\\"P002\\\", \\\"name\\\": \\\"DataMiner\\\"}]}",
+            episode_body="{\"company\": {\"name\": \"Acme Technologies\"}, \"products\": [{\"id\": \"P001\", \"name\": \"CloudSync\"}, {\"id\": \"P002\", \"name\": \"DataMiner\"}]}",
             source="json",
             source_description="CRM data"
         )
@@ -787,7 +787,7 @@ async def add_memory(
         assert graphiti_client is not None, 'graphiti_client should not be None here'
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
         # Define the episode processing function
         async def process_episode():
@@ -882,15 +882,14 @@ async def search_memory_nodes(
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
-        # Perform the search using the _search method
-        search_results = await client._search(
+        # Perform the search using the search_memory_nodes method
+        search_results = await client.search_memory_nodes(
             query=query,
-            config=search_config,
             group_ids=effective_group_ids,
+            max_nodes=max_nodes,
             center_node_uuid=center_node_uuid,
-            search_filter=filters,
         )
 
         if not search_results.nodes:
@@ -951,7 +950,7 @@ async def search_memory_facts(
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
         relevant_edges = await client.search(
             group_ids=effective_group_ids,
@@ -988,7 +987,7 @@ async def delete_entity_edge(uuid: str) -> SuccessResponse | ErrorResponse:
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
         # Get the entity edge by UUID
         entity_edge = await EntityEdge.get_by_uuid(client.driver, uuid)
@@ -1018,7 +1017,7 @@ async def delete_episode(uuid: str) -> SuccessResponse | ErrorResponse:
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
         # Get the episodic node by UUID - EpisodicNode is already imported at the top
         episodic_node = await EpisodicNode.get_by_uuid(client.driver, uuid)
@@ -1048,7 +1047,7 @@ async def get_entity_edge(uuid: str) -> dict[str, Any] | ErrorResponse:
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
         # Get the entity edge directly using the EntityEdge class method
         entity_edge = await EntityEdge.get_by_uuid(client.driver, uuid)
@@ -1088,10 +1087,10 @@ async def get_episodes(
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
-        episodes = await client.retrieve_episodes(
-            group_ids=[effective_group_id], last_n=last_n, reference_time=datetime.now(timezone.utc)
+        episodes = await client.get_episodes(
+            group_id=effective_group_id, last_n=last_n
         )
 
         if not episodes:
@@ -1127,7 +1126,7 @@ async def clear_graph() -> SuccessResponse | ErrorResponse:
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
         # clear_data is already imported at the top
         await clear_data(client.driver)
@@ -1152,7 +1151,7 @@ async def get_status() -> StatusResponse:
         assert graphiti_client is not None
 
         # Use cast to help the type checker understand that graphiti_client is not None
-        client = cast(Graphiti, graphiti_client)
+        client = cast(TeamGraphiti, graphiti_client)
 
         # Test database connection
         await client.driver.client.verify_connectivity()  # type: ignore

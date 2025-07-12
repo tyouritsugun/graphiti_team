@@ -82,13 +82,23 @@ Claude Desktop needs to be configured to launch your MCP server script in a way 
     "--transport",
     "stdio"
   ],
-  "timeout": 120
+  "timeout": 120,
+  "env": {
+    "NEO4J_URI": "bolt://localhost:7687",
+    "NEO4J_USER": "neo4j",
+    "NEO4J_PASSWORD": "demodemo",
+    "NEO4J_DATABASE": "graphiti",
+    "OPENAI_API_KEY": "your_openai_api_key_here",
+    "USER_EMAIL": "your_email@example.com",
+    "PROJECT_ID": "your_project_id"
+  }
 }
 ```
 
 **IMPORTANT**:
--   Replace `/your/path/to/graphiti_team/` with the **absolute path** to the project on your machine.
+-   Replace `/your/path/to/` with the **absolute path** to the project on your machine.
 -   The `"command"` path **must** point to the `python` executable inside the `mcp_server/.venv` directory that was created in Step 1.
+-   Update the values in the `env` block with your actual credentials and information.
 
 **Argument Breakdown:**
 -   `-Xfrozen_modules=off`: Prevents a common debugger warning and ensures breakpoints work reliably.
