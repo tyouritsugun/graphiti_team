@@ -12,7 +12,7 @@ from graphiti_core.helpers import (
     validate_excluded_entity_types,
     validate_group_id,
 )
-from graphiti_core.nodes import EpisodeType, EpisodicNode
+from graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode
 from graphiti_core.search.search_config import SearchResults
 from graphiti_core.search.search_filters import SearchFilters
 from graphiti_core.utils.bulk_utils import (
@@ -168,22 +168,22 @@ class TeamGraphiti(Graphiti):
             if not self.store_raw_episode_content:
                 episode.content = ""
 
-            # Add tags to nodes and edges
-            for node in hydrated_nodes:
-                node.attributes["user_email"] = self.user_email
-                node.attributes["project_id"] = project_id or self.project_id
-                if knowledge_domain:
-                    node.attributes["knowledge_domain"] = knowledge_domain
-                node.attributes["created_at"] = now
-                node.attributes["updated_at"] = now
+            # # Add tags to nodes and edges
+            # for node in hydrated_nodes:
+            #     node.attributes["user_email"] = self.user_email
+            #     node.attributes["project_id"] = project_id or self.project_id
+            #     if knowledge_domain:
+            #         node.attributes["knowledge_domain"] = knowledge_domain
+            #     node.attributes["created_at"] = now.isoformat()
+            #     node.attributes["updated_at"] = now.isoformat()
 
-            for edge in entity_edges:
-                edge.attributes["user_email"] = self.user_email
-                edge.attributes["project_id"] = project_id or self.project_id
-                if knowledge_domain:
-                    edge.attributes["knowledge_domain"] = knowledge_domain
-                edge.attributes["created_at"] = now
-                edge.attributes["updated_at"] = now
+            # for edge in entity_edges:
+            #     edge.attributes["user_email"] = self.user_email
+            #     edge.attributes["project_id"] = project_id or self.project_id
+            #     if knowledge_domain:
+            #         edge.attributes["knowledge_domain"] = knowledge_domain
+            #     edge.attributes["created_at"] = now.isoformat()
+            #     edge.attributes["updated_at"] = now.isoformat()
 
             await add_nodes_and_edges_bulk(
                 self.driver, [episode], episodic_edges, hydrated_nodes, entity_edges, self.embedder

@@ -529,10 +529,17 @@ class MCPConfig(BaseModel):
 
 
 # Configure logging
+log_dir = os.path.join(os.path.dirname(__file__), 'logs')
+os.makedirs(log_dir, exist_ok=True)
+log_file_path = os.path.join(log_dir, 'mcp_server.log')
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    stream=sys.stderr,
+    handlers=[
+        logging.StreamHandler(sys.stderr),
+        logging.FileHandler(log_file_path)
+    ]
 )
 logger = logging.getLogger(__name__)
 
@@ -679,7 +686,9 @@ async def process_episode_queue(group_id: str):
         while True:
             # Get the next episode processing function from the queue
             # This will wait if the queue is empty
+            logger.info(f"Worker for group '{group_id}' waiting for item from queue...")
             process_func = await episode_queues[group_id].get()
+            logger.info(f"Worker for group '{group_id}' got item from queue.")
 
             try:
                 # Process the episode
@@ -764,7 +773,10 @@ async def add_memory(
     """
     global graphiti_client, episode_queues, queue_workers
 
+    logger.info(f"add_memory called with name='{name}' group_id='{group_id}'")
+
     if graphiti_client is None:
+        logger.error("Graphiti client not initialized in add_memory")
         return ErrorResponse(error='Graphiti client not initialized')
 
     try:
@@ -817,14 +829,20 @@ async def add_memory(
 
         # Initialize queue for this group_id if it doesn't exist
         if group_id_str not in episode_queues:
+            logger.info(f"Creating new episode queue for group_id: '{group_id_str}'")
             episode_queues[group_id_str] = asyncio.Queue()
 
         # Add the episode processing function to the queue
+        logger.info(f"Putting episode '{name}' into queue for group_id: '{group_id_str}'")
         await episode_queues[group_id_str].put(process_episode)
+        logger.info(f"Episode '{name}' successfully put into queue for group_id: '{group_id_str}'")
 
         # Start a worker for this queue if one isn't already running
         if not queue_workers.get(group_id_str, False):
+            logger.info(f"No worker found for group_id '{group_id_str}'. Starting a new one.")
             asyncio.create_task(process_episode_queue(group_id_str))
+        else:
+            logger.info(f"Worker already running for group_id '{group_id_str}'.")
 
         # Return immediately with a success message
         return SuccessResponse(
