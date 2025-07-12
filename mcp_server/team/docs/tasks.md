@@ -10,7 +10,7 @@ This task list is derived from the `blueprint.md` and outlines the development w
     - [ ] Implement logic to auto-extract `user_email` and `project_id` from MCP `settings.json`.
     - [ ] Pass `user_email` and `project_id` to all memory operations.
 - [ ] **Database Schema Migration**:
-    - [ ] Create `team/scripts/migrate_schema.py` for schema updates.
+    - [ ] Create `mcp_server/scripts/migrate_schema.py` for schema updates.
     - [ ] Add `user_email`, `knowledge_domain`, `project_id`, `created_at`, and `updated_at` to the `Entity` node properties.
     - [ ] Add `user_email`, `knowledge_domain`, `project_id`, and `created_at` to relationship properties.
     - [ ] Create a composite index on `(e.project_id, e.knowledge_domain)` for `Entity` nodes to optimize filtering.
@@ -27,7 +27,7 @@ This task list is derived from the `blueprint.md` and outlines the development w
 
 ## Phase 2: Database Management Tools
 
-- [ ] **Create Management Functions (`mcp_server/management_functions.py`)**:
+- [ ] **Create Management Functions (`mcp_server/scripts/db_management.py`)**:
     - [ ] Implement `duplicate_database` function.
     - [ ] Implement `remove_by_tags` function for broader data removal.
     - [ ] Implement `merge_databases` function:
@@ -38,13 +38,13 @@ This task list is derived from the `blueprint.md` and outlines the development w
         - [ ] Add a `dry_run` mode to preview changes.
         - [ ] Return a summary of the merge operation.
     - [ ] Implement `transition_project` function for managing project handovers.
-- [ ] **Create Management CLI (`team/scripts/db_management.py`)**:
+- [ ] **Create Management CLI (`mcp_server/scripts/db_management.py`)**:
     - [ ] Build a CLI to expose the new management functions.
     - [ ] Implement the `merge` command with all specified options.
     - [ ] Integrate robust pre-operation backups.
     - [ ] Add progress tracking for bulk operations.
     - [ ] Investigate and implement rollback capabilities for failed operations.
-- [ ] **Backup and Restore Scripts (`team/scripts/backup_restore.py`)**:
+- [ ] **Backup and Restore Scripts (`mcp_server/scripts/backup_restore.py`)**:
     - [ ] Develop and test reliable backup and restore utilities.
 - [ ] **Testing**:
     - [ ] Write `test_management.py` to test all database management functions, with a focus on the `merge` command.
@@ -60,7 +60,7 @@ This task list is derived from the `blueprint.md` and outlines the development w
 
 ## Phase 4: Documentation & Finalization
 
-- [ ] **Create User and Developer Documentation (`team/docs/`)**:
+- [ ] **Create User and Developer Documentation (`mcp_server/docs/`)**:
     - [ ] Write `TAGGING_GUIDE.md` explaining the new tagging system.
     - [ ] Write `MANAGEMENT_API.md` to document the new database management functions and CLI.
     - [ ] Write `MIGRATION_GUIDE.md` for users transitioning from the original Graphiti.

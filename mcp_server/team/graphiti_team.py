@@ -37,6 +37,7 @@ from graphiti_core.utils.maintenance.node_operations import (
     resolve_extracted_nodes,
 )
 from graphiti_core.utils.ontology_utils.entity_types_utils import validate_entity_types
+from graphiti_core.utils.maintenance.community_operations import update_community
 
 logger = logging.getLogger(__name__)
 

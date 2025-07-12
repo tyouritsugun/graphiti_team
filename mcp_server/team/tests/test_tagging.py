@@ -4,7 +4,7 @@ from graphiti_core.llm_client import LLMClient
 from graphiti_core.embedder import EmbedderClient
 from graphiti_core.cross_encoder.client import CrossEncoderClient
 from graphiti_core.graphiti_types import GraphitiClients
-from team.graphiti_team import TeamGraphiti
+from mcp_server.team.graphiti_team import TeamGraphiti
 
 @pytest.fixture
 def graphiti_clients(mocker):
@@ -30,12 +30,12 @@ def team_graphiti(graphiti_clients):
 async def test_add_memory_with_tags(team_graphiti, mocker):
     # Mock the necessary methods
     mocker.patch.object(team_graphiti, "retrieve_episodes", return_value=[])
-    mocker.patch("team.graphiti_team.extract_nodes", return_value=[])
-    mocker.patch("team.graphiti_team.resolve_extracted_nodes", return_value=([], {}, []))
-    mocker.patch("team.graphiti_team.extract_edges", return_value=[])
-    mocker.patch("team.graphiti_team.resolve_extracted_edges", return_value=([], []))
-    mocker.patch("team.graphiti_team.extract_attributes_from_nodes", return_value=[])
-    add_nodes_and_edges_bulk_mock = mocker.patch("team.graphiti_team.add_nodes_and_edges_bulk")
+    mocker.patch("mcp_server.team.graphiti_team.extract_nodes", return_value=[])
+    mocker.patch("mcp_server.team.graphiti_team.resolve_extracted_nodes", return_value=([], {}, []))
+    mocker.patch("mcp_server.team.graphiti_team.extract_edges", return_value=[])
+    mocker.patch("mcp_server.team.graphiti_team.resolve_extracted_edges", return_value=([], []))
+    mocker.patch("mcp_server.team.graphiti_team.extract_attributes_from_nodes", return_value=[])
+    add_nodes_and_edges_bulk_mock = mocker.patch("mcp_server.team.graphiti_team.add_nodes_and_edges_bulk")
 
     await team_graphiti.add_episode(
         name="test_episode",

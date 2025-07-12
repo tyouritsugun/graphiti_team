@@ -60,13 +60,13 @@ graphiti = Graphiti(
 
 **Strategy**: To minimize direct modification of the core library and ease future merges from the upstream repository, we will use inheritance. We will create a new `TeamGraphiti` class that extends the base `Graphiti` class.
 
-**New File**: `team/graphiti_team.py`
+**New File**: `mcp_server/graphiti_team.py`
 
 ### 3.1. Create `TeamGraphiti` Class
 - Create a new class `TeamGraphiti` that inherits from `graphiti_core.graphiti.Graphiti`.
 
 ```python
-# In team/graphiti_team.py
+# In mcp_server/graphiti_team.py
 from graphiti_core.graphiti import Graphiti
 
 class TeamGraphiti(Graphiti):
@@ -101,7 +101,7 @@ class TeamGraphiti(Graphiti):
 # from graphiti_core.graphiti import Graphiti
 
 # Add the new import
-from team.graphiti_team import TeamGraphiti
+from graphiti_team import TeamGraphiti
 
 # ... later in the file, change the instantiation
 graphiti = TeamGraphiti(
@@ -154,7 +154,7 @@ Always search existing memories before adding new ones to avoid duplicates.
 
 ## 5. Testing
 
-**New File**: `team/tests/test_tagging.py`
+**New File**: `mcp_server/tests/test_tagging.py`
 
 ### 5.1. Test Cases
 - **Test `add_memory` with Tags**:

@@ -4,10 +4,10 @@ This document provides a detailed technical specification for the tasks outlined
 
 ## Proposed File Structure
 
-To maintain consistency with the blueprint, all new management scripts and logic will be placed within the `team/scripts` directory.
+To maintain consistency with the blueprint, all new management scripts and logic will be placed within the `mcp_server/scripts` directory.
 
 ```
-team/
+mcp_server/
 ├── scripts/
 │   ├── db_management.py      # Core logic for db operations (merge, duplicate, etc.)
 │   ├── backup_restore.py     # Backup and restore utilities
@@ -22,7 +22,7 @@ team/
 
 ## 1. Core Management Functions
 
-**Target File**: `team/scripts/db_management.py`
+**Target File**: `mcp_server/scripts/db_management.py`
 
 This file will contain the core business logic for all database management operations. Each function should accept a Neo4j driver instance to communicate with the database.
 
@@ -31,7 +31,7 @@ This file will contain the core business logic for all database management opera
 This is the most critical function of this phase. It will merge nodes and relationships from multiple source databases into a single target database.
 
 ```python
-# In team/scripts/db_management.py
+# In mcp_server/scripts/db_management.py
 from neo4j import Driver
 from typing import List, Literal
 
@@ -61,11 +61,11 @@ async def merge_databases(
 
 ## 2. Management Scripts (User-Friendly Approach)
 
-**Strategy**: We will provide simple, single-purpose scripts in the `team/scripts` directory. Each script corresponds to a specific management task and is configured via an adjacent JSON file. This makes them easy to run for non-technical users.
+**Strategy**: We will provide simple, single-purpose scripts in the `mcp_server/scripts` directory. Each script corresponds to a specific management task and is configured via an adjacent JSON file. This makes them easy to run for non-technical users.
 
 ### Example: Merging Databases
 
-#### 1. The Configuration File (`team/scripts/merge_config.json`)
+#### 1. The Configuration File (`mcp_server/scripts/merge_config.json`)
 A user can easily edit this file to define the merge parameters.
 
 ```json
@@ -78,16 +78,16 @@ A user can easily edit this file to define the merge parameters.
 }
 ```
 
-#### 2. The Script (`team/scripts/run_merge.py`)
-This script is simple. It reads the config, calls the core function from `db_management.py`, and prints the status. The user just runs `python team/scripts/run_merge.py`.
+#### 2. The Script (`mcp_server/scripts/run_merge.py`)
+This script is simple. It reads the config, calls the core function from `db_management.py`, and prints the status. The user just runs `python mcp_server/scripts/run_merge.py`.
 
 **Implementation Steps**:
-1.  **Import necessary modules**: `json`, `tqdm`, and the `merge_databases` function from `team.scripts.db_management`.
+1.  **Import necessary modules**: `json`, `tqdm`, and the `merge_databases` function from `mcp_server.scripts.db_management`.
 2.  **Load Configuration**: Open and read `merge_config.json`.
 3.  **Initialize Driver**: Set up the connection to the Neo4j database.
 4.  **Call Core Function**: Call `merge_databases` with the parameters from the loaded config.
 5.  **Provide Feedback**: Print status updates and the final summary.
-6.  **Backup Integration**: Before executing the merge, the script will first call a `create_backup` function from `team.scripts.backup_restore` to ensure safety.
+6.  **Backup Integration**: Before executing the merge, the script will first call a `create_backup` function from `mcp_server.scripts.backup_restore` to ensure safety.
 
 This model will be applied to all other management tasks.
 
@@ -95,7 +95,7 @@ This model will be applied to all other management tasks.
 
 ## 3. Backup and Restore Utilities
 
-**Target File**: `team/scripts/backup_restore.py`
+**Target File**: `mcp_server/scripts/backup_restore.py`
 
 This script will handle database backups by calling the standard `neo4j-admin` tool.
 
@@ -105,7 +105,7 @@ This script will handle database backups by calling the standard `neo4j-admin` t
 
 ## 4. Testing
 
-**Target File**: `team/tests/test_management.py`
+**Target File**: `mcp_server/tests/test_management.py`
 
 **Setup**:
 - Tests will require a live Neo4j instance. A testing framework like `pytest` should be used.

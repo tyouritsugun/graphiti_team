@@ -20,7 +20,11 @@ This blueprint outlines the development of an enhanced version of [Graphiti](htt
 - **Team Changes**: Remove departing members' personal preferences
 - **Knowledge Organization**: Categorize information by domain and ownership
 - **Collaborative Memory**: Share institutional knowledge across team members
-- **Database Consolidation**: Merge knowledge from multiple teams (e.g., Team A & Team B) while excluding project‑specific context to create a shared institutional repository
+- **Database Consolidation**: Merge knowledge from multiple teams (e.g., Team
+
+A & Team
+
+B) while excluding project‑specific context to create a shared institutional repository
 
 
 ## Technical Requirements
@@ -154,8 +158,6 @@ await add_memory(
 )
 ```
 
-The embedding is automatically generated and stored with the node, ready for semantic search.
-
 #### Vector Search with Tag Filters
 
 ```python
@@ -280,14 +282,14 @@ async def transition_project(
 
 #### 4.2 Management Scripts
 
-- **File**: `scripts/db_management.py`
+- **File**: `mcp_server/scripts/db_management.py`
   - Backup database before operations
   - Validate operations with dry‑run mode
   - Bulk operations with progress tracking
   - Rollback capabilities
   - **New CLI command:** `merge`
     ```bash
-    python db_management.py merge --sources team_a_db team_b_db \
+    python mcp_server/scripts/db_management.py merge --sources team_a_db team_b_db \
                                    --target consolidated_db \
                                    --exclude project_specific --keep latest
     ```
@@ -300,9 +302,8 @@ async def transition_project(
 graphiti-fork/
 ├── mcp_server/
 │   ├── graphiti_mcp_server.py          # Enhanced MCP server
+│   ├── graphiti_team.py                # Team-specific Graphiti implementation
 │   ├── cursor_rules.md                 # Updated AI instructions
-│   └── management_functions.py         # New database management functions (incl. merge)
-├── team/
 │   ├── scripts/
 │   │   ├── db_management.py            # Database management CLI (merge added)
 │   │   ├── migrate_schema.py           # Schema migration tools

@@ -11,3 +11,8 @@ dependencies = [
     "azure-identity>=1.21.0",
     "graphiti-core",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "debugpy>=1.8.0",
+]
